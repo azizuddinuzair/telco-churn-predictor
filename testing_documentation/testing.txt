@@ -1,0 +1,134 @@
+
+MI Scores Table:
+             Feature  MI Score (Raw)
+0         customerID        0.578582    Customer ID has no business being this high. Model is taking the ID and finding patterns between the ID numbers. Must remove
+19      TotalCharges        0.540983
+15          Contract        0.098853
+5             tenure        0.077922
+9     OnlineSecurity        0.066099
+12       TechSupport        0.063823
+8    InternetService        0.057011
+10      OnlineBackup        0.047476
+17     PaymentMethod        0.046861
+11  DeviceProtection        0.043627
+18    MonthlyCharges        0.041094
+14   StreamingMovies        0.032325
+13       StreamingTV        0.032053
+16  PaperlessBilling        0.020481
+4         Dependents        0.015082    Remove for simplicity
+3            Partner        0.010735    Remove for simplicity
+2      SeniorCitizen        0.010617    Remove for simplicity
+7      MultipleLines        0.000971    Remove for simplicity
+6       PhoneService        0.000164    Remove for simplicity
+1             gender        0.000002    Remove since it's so useless
+
+
+
+Relationships Worth Checking Out:
+    - Contract (categorical) + tenure (numerical)
+    - Online Security (categorical) + TechSupport (categorical)
+    - StreamingMovies (categorical) + StreamingTV (categorical)
+    - OnlineBackup (categorical) + DeviceProtection (categorical)
+    - PaperlessBilling (categorical) + PaymentMethod (categorical)
+    - Dependents (categorical) + Partner (categorical)
+
+
+Mutual Information Scores:
+    Contract_Tenure                   0.110922
+    OnlineSecurity_TechSupport        0.085671
+    PaperlessBilling_PaymentMethod    0.058723
+    InternetService                   0.057011
+    OnlineBackup_DeviceProtection     0.055518
+    MonthlyCharges                    0.046704
+    TotalCharges                      0.039958
+    StreamingMovies                   0.032325
+    StreamingTV                       0.032053
+
+    Kept combinations:
+    - Contract_Tenure -> had a nice jump up by 0.02
+    - OnlineSecurity_TechSupport -> MI score jumped up by 0.05
+    - OnlineBackup_DeviceProtection -> MI score jumped up by 0.04
+    - PaperlessBilling_PaymentMethod -> MI score jumped up by around 0.03 for PaperlessBilling and 0.001 for PayentMethod. However, since combining both simplifies data and improves MI score, I kept it.
+
+    Non kept combinations:
+    If the MI score improvement was less than 0.01 (for either category), then I decided it was not necessary
+    - Dependents_Partner
+    - StreamingMovies_StreamingTV
+
+    Conclusion: Why did Total Charges drop so low after preprocessing? My guess is that since it was categorical with a high cardinality, it went into OrdinalEncoder as a unique value and
+    the model found some kind of pattern between the unique values. I made changes to turn Total Charges into numeric so that's why it must've dropped lower.
+
+
+Experiment #1: Initial Model Performance (Before Hyperparameter Tuning)
+
+| Model                    | Validation F1 | Validation Accuracy | CV F1  | CV Accuracy | Observations                            |
+| ------------------------ | ------------- | ------------------- | ------ | ----------- | --------------------------------------- |
+| Random Forest Classifier | 0.5351        | 0.7743              | 0.5094 | 0.7677      | Mild overfitting, decent F1/accuracy    |
+| K-Nearest Neighbors      | 0.5774        | 0.7154              | 0.3235 | 0.7354      | Strong overfitting, poor generalization |
+| Logistic Regression      | 0.5325        | 0.7807              | 0.5569 | 0.7964      | Stable, consistent between val & CV     |
+
+Conclusions:
+- KNN’s low CV F1 vs validation F1 shows strong overfitting. Needs more neighbors or weight adjustments.
+- LR has the best accuracy and F1 score stability out of the three, so we'll use it as a benchmark to improve the other models.
+- RFC is decent but could improve by tuning min_samples_leaf.
+
+
+
+
+
+Experiment #2: Hyperparameter Adjustments
+Changes ->
+- RFC: Increased min_samples_leaf to 7
+- KNN: Changed weights to "distance"
+
+| Model                    | Validation F1 | Validation Accuracy | CV F1  | CV Accuracy | Observations                                                                 |
+| ------------------------ | ------------- | ------------------- | ------ | ----------- | ---------------------------------------------------------------------------- |
+| Random Forest Classifier | 0.5653        | 0.7850              | 0.5799 | 0.7930      | Slight underfitting, CV F1 slightly higher than val F1; good generalization  |
+| K-Nearest Neighbors      | 0.5604        | 0.7161              | 0.4253 | 0.7485      | Overfitting: val F1 > CV F1; may need larger neighbors or distance weighting |
+| Logistic Regression      | 0.5325        | 0.7807              | 0.5569 | 0.7964      | Stable, consistent; good generalization                                      |
+
+Conclusions:
+- RFC and KNN accuracy improved.
+- RFC may need further tuning (n_estimators, max_depth).
+- KNN CV F1 closer to validation F1, but still room to improve.
+
+
+
+
+
+Experiment #3: Final Tuning for Hyperparameters
+Changes ->
+- RFC: max_depth = 10, n_estimators = 200
+- KNN: metric = "manhattan"
+
+| Model                    | Validation F1 | Validation Accuracy | CV F1  | CV Accuracy | Observations                                                         |
+| ------------------------ | ------------- | ------------------- | ------ | ----------- | -------------------------------------------------------------------- |
+| Random Forest Classifier | 0.5731        | 0.7885              | 0.5857 | 0.7968      | Strong generalization; CV F1 higher than val F1, best overall so far |
+| K-Nearest Neighbors      | 0.5557        | 0.7651              | 0.4772 | 0.7749      | Overfitting reduced; CV F1 improving but still lags validation       |
+| Logistic Regression      | 0.5325        | 0.7807              | 0.5569 | 0.7964      | Stable and consistent; unchanged baseline                            |
+
+
+Conclusion:
+- RFC is the best predictor overall — strong F1 and accuracy.
+- KNN is difficult to tune for this dataset; RFC is preferable.
+- LR serves as a stable baseline; could be competitive with further tuning.
+
+
+Unforeseen Experiment #4:
+Changes -> 
+- Had an issue where the TotalCharges were being treated as categorical. Got it fixed.
+
+| Model                    | Validation F1 | Validation Accuracy | CV F1  | CV Accuracy | Observations                                  |
+| ------------------------ | ------------- | ------------------- | ------ | ----------- | --------------------------------------------- |
+| Random Forest Classifier | 0.5698        | 0.7921              | 0.5694 | 0.7959      | Stable performance; strong generalization     |
+| K-Nearest Neighbors      | 0.5110        | 0.7488              | 0.5421 | 0.7650      | CV F1 higher than val F1; slight underfitting |
+| Logistic Regression      | 0.5569        | 0.7842              | 0.5856 | 0.7993      | CV F1 higher; generalization improved         |
+
+
+Conclusion:
+- Fixing up that major oversight for TotalCharges changed up the results quite a bit 
+- Logistic Regression benefitted the most from this change, now contending head to head with RFC for accuracy and model quality
+- RFC is the most stable amongst the three, having it's validation and cv F1 scores be near identical
+- KNN still performs the poorest
+
+Final Conclusion: Logistic Regression is probably the best for this dataset, since even without tuning the Hyperparameters it had a strong accuracy and quality

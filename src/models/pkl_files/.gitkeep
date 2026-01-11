@@ -1,0 +1,4 @@
+# Placeholder for PKL model files
+# Trained models will be saved here with .pkl extension
+
+*.pkl files will be stored in this directory
