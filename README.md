@@ -76,7 +76,7 @@ Or if you download on your own machine:
 streamlit run streamlit_apps/app.py --server.port 8502
 ```
 
-The Streamlit app provides a modern, interactive web interface with sidebar navigation:
+The Streamlit app provides an interactive web interface with sidebar navigation:
 - **User**: Make predictions on customer churn
 - **Developer Tools**: MI Analysis, Model Testing, Model Comparison
 
