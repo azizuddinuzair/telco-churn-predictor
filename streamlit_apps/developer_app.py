@@ -92,7 +92,7 @@ def main():
     with st.spinner("Loading data..."):
         X_train, X_valid, y_train, y_valid, raw_feature_cols, numerical_cols, categorical_cols = load_and_prepare_data()
     
-    st.success(f"✅ Data loaded: {len(X_train)} training samples, {len(X_valid)} validation samples")
+    st.success(f"Data loaded: {len(X_train)} training samples, {len(X_valid)} validation samples")
     
     # Sidebar
     st.sidebar.header("Developer Tools")
@@ -103,7 +103,7 @@ def main():
     
     # Main content based on selection
     if analysis_type == "Mutual Information Analysis":
-        st.header("📊 Mutual Information Analysis")
+        st.header("Mutual Information Analysis")
         st.write("Mutual Information (MI) measures the dependency between features and the target variable.")
         
         if st.button("Compute MI Scores", type="primary"):
@@ -126,7 +126,7 @@ def main():
                 st.pyplot(fig)
     
     elif analysis_type == "Model Testing":
-        st.header("🤖 Model Testing")
+        st.header("Model Testing")
         
         model_choice = st.selectbox(
             "Select Model to Test:",
@@ -165,7 +165,7 @@ def main():
         
         # Display validation scores if model has been trained
         if st.session_state.trained_model is not None:
-            st.subheader("📈 Validation Set Performance")
+            st.subheader("Validation Set Performance")
             col1, col2 = st.columns(2)
             col1.metric("F1 Score", f"{st.session_state.validation_scores[0]:.4f}")
             col2.metric("Accuracy", f"{st.session_state.validation_scores[1]:.4f}")
@@ -175,13 +175,13 @@ def main():
                 with st.spinner("⏳ Performing 5-fold cross-validation... This may take a minute."):
                     cv_f1, cv_acc = get_cv_score(st.session_state.trained_model, X_train, y_train)
                 
-                st.subheader("🔄 Cross-Validation Performance (5-Fold)")
+                st.subheader("Cross-Validation Performance (5-Fold)")
                 col1, col2 = st.columns(2)
                 col1.metric("CV F1 Score", f"{cv_f1:.4f}")
                 col2.metric("CV Accuracy", f"{cv_acc:.4f}")
     
     else:  # Model Comparison
-        st.header("⚖️ Model Comparison")
+        st.header("Model Comparison")
         st.write("Compare performance across all models")
         
         if st.button("Train & Compare All Models", type="primary"):
@@ -217,16 +217,16 @@ def main():
                 
                 progress_bar.progress((idx + 1) / len(models))
             
-            status_text.text("✅ All models trained!")
+            status_text.text("All models trained!")
             
             # Display results
             results_df = pd.DataFrame(results)
-            st.subheader("📊 Comparison Results")
+            st.subheader("Comparison Results")
             st.dataframe(results_df.style.highlight_max(axis=0, subset=["Validation F1", "Validation Accuracy", "CV F1", "CV Accuracy"]), 
                         use_container_width=True)
             
             # Visualization
-            st.subheader("📈 Performance Comparison")
+            st.subheader("Performance Comparison")
             fig, axes = plt.subplots(1, 2, figsize=(14, 5))
             
             # Validation scores

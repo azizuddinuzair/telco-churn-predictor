@@ -86,7 +86,21 @@ def get_user_input_streamlit(X_train, raw_feature_cols):
         Dictionary of user inputs
     """
     user_data = {}
-    numerical_cols = X_train.select_dtypes(include=["int64", "float64"]).columns.tolist()
+    
+    # Make a copy to avoid modifying the original
+    X_train_clean = X_train.copy()
+    
+    # Convert columns that can be numerical to numeric type
+    # This handles cases like TotalCharges which are stored as strings
+    for col in X_train_clean.columns:
+        if col not in X_train_clean.select_dtypes(include=["int64", "float64"]).columns:
+            # Try to convert to numeric, coerce errors to NaN
+            converted = pd.to_numeric(X_train_clean[col], errors='coerce')
+            # If most values can be converted, use the converted column
+            if converted.notna().mean() >= 0.9:
+                X_train_clean[col] = converted
+    
+    numerical_cols = X_train_clean.select_dtypes(include=["int64", "float64"]).columns.tolist()
     
     # Create columns for better layout
     col1, col2 = st.columns(2)
@@ -96,18 +110,16 @@ def get_user_input_streamlit(X_train, raw_feature_cols):
         current_col = col1 if idx % 2 == 0 else col2
         
         with current_col:
-            if col in numerical_cols or can_be_number(X_train[col]):
-                # Numerical input
-                min_val = float(X_train[col].min())
-                max_val = float(X_train[col].max())
-                mean_val = float(X_train[col].mean())
+            if col in numerical_cols or can_be_number(X_train_clean[col]):
+                # Numerical input - use cleaned data
+                min_val = float(X_train_clean[col].min())
+                max_val = float(X_train_clean[col].max())
+                mean_val = float(X_train_clean[col].mean())
                 
                 user_data[col] = st.number_input(
                     f"{col}",
-                    min_value=min_val,
-                    max_value=max_val,
                     value=mean_val,
-                    help=f"Range: {min_val:.2f} - {max_val:.2f}"
+                    help=f"Training range: {min_val:.2f} - {max_val:.2f}"
                 )
             else:
                 # Categorical input
@@ -123,7 +135,7 @@ def get_user_input_streamlit(X_train, raw_feature_cols):
 
 def main():
     # Header
-    st.markdown('<p class="main-header">🎯 Customer Churn Prediction</p>', unsafe_allow_html=True)
+    st.markdown('<p class="main-header">Customer Churn Prediction</p>', unsafe_allow_html=True)
     st.markdown("---")
     
     # Introduction
@@ -144,10 +156,10 @@ def main():
         X_train, X_valid, y_train, y_valid, raw_feature_cols, numerical_cols, categorical_cols = load_and_prepare_data()
         model = train_model(X_train, y_train, numerical_cols, categorical_cols)
     
-    st.success("✅ System ready!")
+    st.success("System ready!")
     
     st.markdown("---")
-    st.header("📝 Enter Customer Information")
+    st.header("Enter Customer Information")
     
     # Get user inputs
     user_data = get_user_input_streamlit(X_train, raw_feature_cols)
@@ -157,7 +169,7 @@ def main():
     
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        predict_button = st.button("🔮 Predict Churn", type="primary", use_container_width=True)
+        predict_button = st.button("Predict Churn", type="primary", use_container_width=True)
     
     if predict_button:
         # Create DataFrame from user input
@@ -172,7 +184,7 @@ def main():
         
         if prediction[0] == 1:
             st.markdown(
-                '<div class="prediction-box churn-yes">⚠️ Customer is likely to CHURN</div>',
+                '<div class="prediction-box churn-yes">Customer is likely to CHURN</div>',
                 unsafe_allow_html=True
             )
             st.warning("""
@@ -184,7 +196,7 @@ def main():
             """)
         else:
             st.markdown(
-                '<div class="prediction-box churn-no">✅ Customer is likely to STAY</div>',
+                '<div class="prediction-box churn-no">Customer is likely to STAY</div>',
                 unsafe_allow_html=True
             )
             st.success("""
@@ -195,7 +207,7 @@ def main():
             """)
         
         # Show input summary
-        with st.expander("📊 View Input Summary"):
+        with st.expander("View Input Summary"):
             st.dataframe(user_df.T, use_container_width=True)
     
     # Footer
@@ -203,7 +215,7 @@ def main():
     st.markdown("**Telco Customer Churn Prediction System** | Powered by Machine Learning")
     
     # Sidebar info
-    st.sidebar.header("ℹ️ About")
+    st.sidebar.header("About")
     st.sidebar.info("""
     **Model:** Random Forest Classifier
     
@@ -216,7 +228,7 @@ def main():
     **Accuracy:** ~80% on validation set
     """)
     
-    st.sidebar.header("📖 Feature Descriptions")
+    st.sidebar.header("Feature Descriptions")
     with st.sidebar.expander("Learn more about features"):
         st.markdown("""
         - **MonthlyCharges:** Amount charged per month
