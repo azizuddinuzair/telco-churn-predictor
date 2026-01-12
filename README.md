@@ -96,6 +96,10 @@ The Streamlit app provides a modern, interactive web interface with sidebar navi
 - **User**: Make predictions on customer churn
 - **Developer Tools**: MI Analysis, Model Testing, Model Comparison
 
+You can also view screenshots in [telco-churn-predictor/Churn_StreamlitAPP_Screenshots](https://github.com/azizuddinuzair/telco-churn-predictor/tree/main/Churn_StreamlitAPP_Screenshots)
+
+<br>
+
 4. Have Fun :)
 
 
@@ -115,13 +119,12 @@ Access at `http://localhost:8502` with sidebar navigation for User and Developer
 
 ## **Refactoring Journey**
 
-After completing the initial implementation, I refactored the entire project to follow proper software engineering practices. This included:
+After completing the initial implementation, I refactored the entire project to try follow proper software engineering practices. This included:
 
-- **Separation of concerns**: Split the monolithic script into modular components (models, interfaces, utilities)
-- **Feature pipeline isolation**: Moved `FeaturePipeline` into its own module to prevent code duplication
-- **Model persistence**: Added save/load functionality so trained models can be reused without retraining
+- **Feature pipeline isolation**: Moved `FeaturePipeline` into its own module
+- **Model persistence**: Added save/load functionality to BaseModel so trained models can be reused without retraining
 - **Dual interfaces**: Created both console and Streamlit web interfaces to serve different use cases
-- **Clean architecture**: Organized code into logical packages (models, interfaces, utils) for better maintainability
+- **Clean architecture**: Organized code into seperate packages (models, interfaces, utils) for better maintainability and cleaner code
 
 
-The original code is preserved in `src/old_telco_churn_predictor.py` for reference, and is also available at [LearningML_Winter2025](https://github.com/azizuddinuzair/LearningML_Winter2025)
+The original code is preserved in `archives/old_telco_churn_predictor.py` for reference, and is also available at [LearningML_Winter2025](https://github.com/azizuddinuzair/LearningML_Winter2025)
