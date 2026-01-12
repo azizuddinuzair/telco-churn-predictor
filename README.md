@@ -83,11 +83,6 @@ The Streamlit app provides an interactive web interface with sidebar navigation:
 You can also view screenshots in [telco-churn-predictor/Churn_StreamlitAPP_Screenshots](https://github.com/azizuddinuzair/telco-churn-predictor/tree/main/Churn_StreamlitAPP_Screenshots)
 
 <br>
-
-4. Have Fun :)
-
-
-<br>
 <br>
 
 ## **Docker Deployment**
