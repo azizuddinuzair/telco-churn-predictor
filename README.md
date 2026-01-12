@@ -12,27 +12,17 @@ The project implements:
 - **Mutual Information (MI) and Cross Validation analysis** to identify important features and model quality
 - **Model persistence**: Save and load trained models for reuse
 
-> *I applied the concepts learned in week 2 to a real-world customer churn prediction problem, reinforcing and solidifying my understanding of feature engineering and model evaluation. I then refactored the project to follow proper software engineering practices with clean architecture and separation of concerns.*
+> *I applied the concepts learned in (LearningML_Winter2025)[https://github.com/azizuddinuzair/LearningML_Winter2025] to a real-world customer churn prediction problem, reinforcing and solidifying my understanding of feature engineering and model evaluation. I then refactored the project to try to follow proper software engineering practices with clean architecture.*
 ---
 
 ## **Project Structure**
 
-The project has been refactored into a clean, modular architecture:
-
-```
-telco-churn-predictor/
-├── src/
-│   ├── models/              # Model classes and feature engineering
-│   ├── interfaces/          # Console UI for developer and user modes
-│   ├── data_loader.py       # Data loading utilities
-│   └── utils.py             # Helper functions (MI scores, evaluation)
-├── streamlit_apps/
-│   ├── developer_app.py     # Web interface for developers
-│   └── user_app.py          # Web interface for end users
-├── data/                    # Dataset location
-├── run_app.py              # Console entry point
-└── requirements.txt        # Dependencies
-```
+- **src/models/**: ML models, feature engineering pipeline, and saved model storage
+- **streamlit_apps/**: Web interfaces (developer and user apps)
+- **data/**: Dataset location
+- **archive/**: Legacy console interfaces and original implementation
+- **Churn_StreamlitAPP_Screenshots/**: Screenshots of the Streamlit applications
+- **Dockerfile & compose.yaml**: Docker configuration for containerized deployment (if ever needed)
 
 ---
 
@@ -46,7 +36,7 @@ telco-churn-predictor/
 
 ## **Feature Engineering**
 
-New features were created to capture interactions between existing columns:  
+New features I created to capture interactions between existing columns:  
 
 - `tenure_bin`: Categorized tenure into bins so that it simplifies the dataset and reveals relationships that would otherwise be hidden
 - `Contract_Tenure`: Combination of contract type and tenure bin
@@ -96,14 +86,10 @@ python run_app.py
 
 ### **Web Interface (Streamlit)**
 
-**Developer App** (Port 8501) - For model analysis and testing:
-```bash
-streamlit run streamlit_apps/developer_app.py --server.port 8501
-```
 
-**User App** (Port 8502) - For making predictions:
+**Combined App** (Single URL with tabs for User + Developer):
 ```bash
-streamlit run streamlit_apps/user_app.py --server.port 8502
+streamlit run streamlit_apps/app.py --server.port 8502
 ```
 
 The Streamlit apps provide a modern, interactive web interface. The developer app is great for exploring feature importance and comparing models, while the user app offers a simple form-based interface for predictions.

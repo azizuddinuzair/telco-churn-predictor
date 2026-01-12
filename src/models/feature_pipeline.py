@@ -89,7 +89,7 @@ class FeaturePipeline(BaseEstimator, TransformerMixin):
         # Ensure TotalCharges is numerical so it is treated as a continuous feature
         if "TotalCharges" in X.columns:
             X["TotalCharges"] = pd.to_numeric(X["TotalCharges"], errors="coerce")
-            X["TotalCharges"].fillna(X["TotalCharges"].median(), inplace=True)
+            X["TotalCharges"] = X["TotalCharges"].fillna(X["TotalCharges"].median())
 
         # Feature engineering steps
         X["tenure_bin"] = pd.cut(X["tenure"], bins=[0, 6, 12, 24, 48, 75], labels=False, include_lowest=True)

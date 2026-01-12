@@ -3,8 +3,7 @@
 When you're ready, start your application by running:
 `docker compose up --build`.
 
-Your telco-customer-churn User application will be available at http://localhost:8502.
-Your telco-customer-churn Developer application will be available at http://localhost:8501.
+Your application will be available at http://localhost:8502.
 
 ### Deploying your application to the cloud
 

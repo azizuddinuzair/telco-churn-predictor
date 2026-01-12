@@ -1,25 +1,19 @@
-# Telco Customer Churn Predictor - Docker Compose Configuration
-# This configuration runs two separate Streamlit applications:
-# 1. User App (port 8502) - For making churn predictions
-# 2. Developer App (port 8501) - For model analysis and testing
+# Comments are provided throughout this file to help you get started.
+# If you need more help, visit the Docker Compose reference guide at
+# https://docs.docker.com/go/compose-spec-reference/
 
+# Here the instructions define your application as a service called "server".
+# This service is built from the Dockerfile in the current directory.
+# You can add other services your application may depend on here, such as a
+# database or a cache. For examples, see the Awesome Compose repository:
+# https://github.com/docker/awesome-compose
 services:
-  user-app:
+  server:
     build:
       context: .
     ports:
       - 8502:8502
-    command: streamlit run streamlit_apps/user_app.py --server.port 8502 --server.address 0.0.0.0
-    container_name: churn-predictor-user
-    restart: unless-stopped
-
-  developer-app:
-    build:
-      context: .
-    ports:
-      - 8501:8501
-    command: streamlit run streamlit_apps/developer_app.py --server.port 8501 --server.address 0.0.0.0
-    container_name: churn-predictor-developer
+    command: python -m streamlit run streamlit_apps/app.py --server.port 8502 --server.address 0.0.0.0 --server.headless true
     restart: unless-stopped
 
 # The commented out section below is an example of how to define a PostgreSQL
