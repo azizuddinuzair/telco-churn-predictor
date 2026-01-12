@@ -4,22 +4,23 @@ This directory contains two separate Streamlit applications and one combined app
 
 ## Apps
 
-### Combined App (`app.py`)
-**Port:** configurable (default 8502)  
-**Purpose:** Single URL with two tabs (User + Developer)
+### Web Interface (`app.py`)
+***Deployed*** -> Visit at: [Telco Customer Churn Predictor](https://telco-churn-predictor-9f3gy7wbrwmm5jsgarwfuq.streamlit.app/)
 
-**Run:**
-```bash
-streamlit run streamlit_apps/app.py --server.port 8502
 
 ```
 
 ## Docker Deployment
 
-For production, you can choose either approach:
-- **Two containers** (separate URLs):
-- Developer App: `localhost:8501`
-- User App: `localhost:8502`
-- **Single container** (one URL): run `app.py` with tabs.
+**Recommended** - Run via Docker Compose:
+```bash
+cd ..
+docker compose build
+docker compose up
+```
+Access at `http://localhost:8502` with sidebar navigation.
 
-Both options are supported by the existing Dockerfile/compose setup.
+**Alternative** - Run locally without Docker:
+```bash
+streamlit run streamlit_apps/app.py --server.port 8502
+```

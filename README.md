@@ -12,7 +12,7 @@ The project implements:
 - **Mutual Information (MI) and Cross Validation analysis** to identify important features and model quality
 - **Model persistence**: Save and load trained models for reuse
 
-> *I applied the concepts learned in (LearningML_Winter2025)[https://github.com/azizuddinuzair/LearningML_Winter2025] to a real-world customer churn prediction problem, reinforcing and solidifying my understanding of feature engineering and model evaluation. I then refactored the project to try to follow proper software engineering practices with clean architecture.*
+> *I applied the concepts learned in [LearningML_Winter2025](https://github.com/azizuddinuzair/LearningML_Winter2025) to a real-world customer churn prediction problem, reinforcing and solidifying my understanding of feature engineering and model evaluation. I then refactored the project to try to follow proper software engineering practices with clean architecture.*
 ---
 
 ## **Project Structure**
@@ -85,20 +85,33 @@ python run_app.py
 3. Enter "Developer" (case sensitive) to access developer mode with MI analysis and model comparison. Otherwise, enter your name for user mode to make predictions.
 
 ### **Web Interface (Streamlit)**
+***Deployed*** -> Visit at: [Telco Customer Churn Predictor](https://telco-churn-predictor-9f3gy7wbrwmm5jsgarwfuq.streamlit.app/)
 
-
-**Combined App** (Single URL with tabs for User + Developer):
+Or if you download on your own machine:
 ```bash
 streamlit run streamlit_apps/app.py --server.port 8502
 ```
 
-The Streamlit apps provide a modern, interactive web interface. The developer app is great for exploring feature importance and comparing models, while the user app offers a simple form-based interface for predictions.
+The Streamlit app provides a modern, interactive web interface with sidebar navigation:
+- **User**: Make predictions on customer churn
+- **Developer Tools**: MI Analysis, Model Testing, Model Comparison
 
 4. Have Fun :)
 
 
 <br>
 <br>
+
+## **Docker Deployment**
+
+**Recommended** - Run via Docker Compose (single app with sidebar):
+```bash
+docker compose build
+docker compose up
+```
+Access at `http://localhost:8502` with sidebar navigation for User and Developer Tools.
+
+---
 
 ## **Refactoring Journey**
 
@@ -110,16 +123,5 @@ After completing the initial implementation, I refactored the entire project to 
 - **Dual interfaces**: Created both console and Streamlit web interfaces to serve different use cases
 - **Clean architecture**: Organized code into logical packages (models, interfaces, utils) for better maintainability
 
-The original code is preserved in `src/old_telco_churn_predictor.py` for reference.
 
----
-
-## Week Three Reflection:
-
-### *Key Mistakes and Corrections*
-- **Data Leakage through identifiers**<br>customerID initially had an extremely high MI score. This was due to the model learning ID patterns, so I removed the column entirely to prevent leakage.
-- **Preprocessing outside pipelines**<br>Early versions of the code applied feature engineering and preprocessing outside the model pipeline, which caused data leakage and inconsistency. I resolved this by creating a `FeaturePipeline` class to handle all preprocessing within the pipeline.
-- **Overfitting/Underfitting not visible through validation**<br>  KNN performed well on the validation set but failed under cross-validation, highlighting the importance of cross-validation for assessing model performance.
-- **Mishandled a categorical column with High Cardinality**<br>`TotalCharges` was a categorical column that should've been numerical but wasn't because it was stored as a string. I converted it to numeric at the end to ensure proper modeling.
-- **Poor code organization**<br>The original implementation had everything in one file, making it hard to maintain and test. I refactored it into a proper project structure with separate modules for models, interfaces, and utilities.
-
+The original code is preserved in `src/old_telco_churn_predictor.py` for reference, and is also available at [LearningML_Winter2025](https://github.com/azizuddinuzair/LearningML_Winter2025)
