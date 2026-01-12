@@ -4,15 +4,13 @@
 
 This project predicts whether a telecom customer will **churn** (i.e., stop using the service) based on their account and service features.  
 
-The project implements:  
+Key Highlights:  
 
-- **Feature engineering**: Feature engineering to create meaningful combined features that increased mutual information with the target and improved model predictability
-- **Machine learning models**: Random Forest Classifier, K-Nearest Neighbors (KNN), and Logistic Regression  
-- **Dual interfaces**: Both console and web-based (Streamlit) interfaces for evaluating models and making predictions
-- **Mutual Information (MI) and Cross Validation analysis** to identify important features and model quality
-- **Model persistence**: Save and load trained models for reuse
+- **Feature engineering**: Created interaction features improving mutual information with the target
+- **Machine learning models**: Random Forest (CV F1=0.569, Accuracy=0.796) outperforms baseline Logistic Regression and KNN, with full CV evaluation.
+- **Engineering & interfaces**: Streamlit web interface for developer experimentation and user predictions, built on modular, maintainable architecture.
+- **Deployment-ready**: Dockerized with optional Compose setup
 
-> *I applied the concepts learned in [LearningML_Winter2025](https://github.com/azizuddinuzair/LearningML_Winter2025) to a real-world customer churn prediction problem, reinforcing and solidifying my understanding of feature engineering and model evaluation. I then refactored the project to try to follow proper software engineering practices with clean architecture.*
 ---
 
 ## **Project Structure**
@@ -20,7 +18,7 @@ The project implements:
 - **src/models/**: ML models, feature engineering pipeline, and saved model storage
 - **streamlit_apps/**: Web interfaces (developer and user apps)
 - **data/**: Dataset location
-- **archive/**: Legacy console interfaces and original implementation
+- **archive/**: Old console interfaces and original implementation
 - **Churn_StreamlitAPP_Screenshots/**: Screenshots of the Streamlit applications
 - **Dockerfile & compose.yaml**: Docker configuration for containerized deployment (if ever needed)
 
@@ -28,7 +26,7 @@ The project implements:
 
 ## **Dataset**
 
-- **Source:** `Telco-Customer-Churn.csv` sourced from [Kaggle]("https://www.kaggle.com/datasets/blastchar/telco-customer-churn") 
+- **Source:** `Telco-Customer-Churn.csv` sourced from [Kaggle](https://www.kaggle.com/datasets/blastchar/telco-customer-churn) 
 - **Target variable:** `Churn` (`Yes` → 1, `No` → 0)  
 - **Preprocessing:** Dropped columns shown (via MI analysis or domain reasoning) to have little predictive value or to cause leakage: `customerID`, `gender`, `PhoneService`, `MultipleLines`, `SeniorCitizen`, `Partner`, `Dependents` 
 
@@ -38,13 +36,13 @@ The project implements:
 
 New features I created to capture interactions between existing columns:  
 
-- `tenure_bin`: Categorized tenure into bins so that it simplifies the dataset and reveals relationships that would otherwise be hidden
-- `Contract_Tenure`: Combination of contract type and tenure bin
-- `OnlineSecurity_TechSupport`: Combination of online security and tech support subscription  
-- `OnlineBackup_DeviceProtection`: Combination of backup and device protection services  
-- `PaperlessBilling_PaymentMethod`: Combination of billing method and payment method  
+- `tenure_bin`: Categorized tenure into bins to simplify dataset
+- `Contract_Tenure`: Contract type x tenure bin
+- `OnlineSecurity_TechSupport`: Online security x tech support   
+- `OnlineBackup_DeviceProtection`: Online Backup x device protection services  
+- `PaperlessBilling_PaymentMethod`: Billing method x payment method  
 
-Columns with low predictive value or redundancy were removed, such as `Contract`, `tenure`, and gender-related columns.  
+Columns with low predictive value or redundancy were removed. Features improved model predictability (measured via mutual information).
 
 ---
 
@@ -52,17 +50,12 @@ Columns with low predictive value or redundancy were removed, such as `Contract`
 
 Three machine learning models were trained and evaluated:
 
-1. **Random Forest Classifier (RFC)**  
-   - Tuned with `n_estimators=200`, `max_depth=10`, `min_samples_leaf=7`  
-   - Best performing model overall  
+| Model                              | Validation F1 / Accuracy | CV F1 / Accuracy | Notes                                                                        |
+| ---------------------------------- | ------------------------ | ---------------- | ---------------------------------------------------------------------------- |
+| **Random Forest Classifier (RFC)** | 0.570 / 0.792            | 0.569 / 0.796    | Best overall; tuned `n_estimators=200`, `max_depth=10`, `min_samples_leaf=7` |
+| **K-Nearest Neighbors (KNN)**      | 0.511 / 0.749            | 0.542 / 0.765    | Shows slight overfitting; CV F1 below RFC                                    |
+| **Logistic Regression (LR)**       | 0.557 / 0.784            | 0.586 / 0.799    | Baseline model; stable performance across validation and CV                        |
 
-2. **K-Nearest Neighbors (KNN)**  
-   - Tuned with `weights="distance"` and `metric="manhattan"`  
-   - Shows some overfitting; CV F1 score slightly lags validation F1  
-
-3. **Logistic Regression (LR)**  
-   - Baseline/control model used to judge the performance of the other models
-   - Stable performance between validation and CV scores  
 
 ---
 
@@ -74,15 +67,6 @@ Three machine learning models were trained and evaluated:
 ```bash
 pip install -r requirements.txt
 ```
-
-### **Console Version**
-
-2. Run the console application:
-```bash
-python run_app.py
-```
-
-3. Enter "Developer" (case sensitive) to access developer mode with MI analysis and model comparison. Otherwise, enter your name for user mode to make predictions.
 
 ### **Web Interface (Streamlit)**
 ***Deployed*** -> Visit at: [Telco Customer Churn Predictor](https://telco-churn-predictor-9f3gy7wbrwmm5jsgarwfuq.streamlit.app/)
@@ -121,10 +105,9 @@ Access at `http://localhost:8502` with sidebar navigation for User and Developer
 
 After completing the initial implementation, I refactored the entire project to try follow proper software engineering practices. This included:
 
-- **Feature pipeline isolation**: Moved `FeaturePipeline` into its own module
-- **Model persistence**: Added save/load functionality to BaseModel so trained models can be reused without retraining
-- **Dual interfaces**: Created both console and Streamlit web interfaces to serve different use cases
-- **Clean architecture**: Organized code into seperate packages (models, interfaces, utils) for better maintainability and cleaner code
+- **Modular Architecture and Code Organization**: Separated models, feature pipelines, and utilities into independent, reusable packages for maintainability and clarity.
+- **Persistent Models**: Added save/load functionality so trained models can be reused without retraining
+- **Web Interface**: Streamlit app for both developer tools and end-user predictions.
 
 
 The original code is preserved in `archives/old_telco_churn_predictor.py` for reference, and is also available at [LearningML_Winter2025](https://github.com/azizuddinuzair/LearningML_Winter2025)
