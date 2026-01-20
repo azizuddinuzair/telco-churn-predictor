@@ -302,3 +302,12 @@ elif page == "Model Comparison":
         axes[1].set_ylabel("Score")
         plt.tight_layout()
         st.pyplot(fig)
+
+# Add repo link at the bottom of the sidebar
+with st.sidebar:
+    st.markdown("---")
+    st.markdown("<div style='text-align: center; margin-top: 2em;'>"
+                "<a href='https://github.com/azizuddinuzair/telco-churn-predictor' target='_blank' style='text-decoration: none;'>"
+                "<span style='display:inline-block;padding:0.5em 1.2em;background:#f5f5f5;border:1px solid #ddd;border-radius:6px;color:#222;font-size:1em;cursor:pointer;'>"
+                "View Repo"
+                "</span></a></div>", unsafe_allow_html=True)
