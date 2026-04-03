@@ -103,9 +103,20 @@ def inject_theme_styles() -> None:
             [data-testid="stSidebar"] h1,
             [data-testid="stSidebar"] h2,
             [data-testid="stSidebar"] h3,
-            [data-testid="stSidebar"] p,
-            [data-testid="stSidebar"] span {{
+            [data-testid="stSidebar"] p {{
                 color: {PALETTE["sidebar_text"]};
+            }}
+
+            [data-testid="stSidebar"] button p,
+            [data-testid="stSidebar"] button span,
+            [data-testid="stSidebar"] button div {{
+                color: #0F172A !important;
+            }}
+
+            [data-testid="stSidebar"] button:hover p,
+            [data-testid="stSidebar"] button:hover span,
+            [data-testid="stSidebar"] button:hover div {{
+                color: #0F172A !important;
             }}
 
             [data-testid="stButton"] button {{
