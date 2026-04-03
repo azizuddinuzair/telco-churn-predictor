@@ -6,6 +6,7 @@ and preprocessing for the customer churn prediction models.
 """
 
 import pandas as pd
+from pandas.api.types import is_numeric_dtype
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.impute import SimpleImputer
@@ -45,8 +46,8 @@ class FeaturePipeline(BaseEstimator, TransformerMixin):
         """
         X_fe = self._feature_engineering(X)
 
-        self.numerical_cols_ = [col for col in X_fe.columns if X_fe[col].dtype in ["int64", "float64"]]
-        self.categorical_cols_ = [col for col in X_fe.columns if X_fe[col].dtype == "object"]
+        self.numerical_cols_ = [col for col in X_fe.columns if is_numeric_dtype(X_fe[col])]
+        self.categorical_cols_ = [col for col in X_fe.columns if not is_numeric_dtype(X_fe[col])]
         
         # Do all preprocessing after feature engineering
         numerical_transformer_ = Pipeline(steps=[

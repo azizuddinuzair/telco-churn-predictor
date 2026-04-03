@@ -82,7 +82,7 @@ def get_numerical_categorical_cols(X: pd.DataFrame):
     Returns:
         Tuple of (numerical_cols, categorical_cols)
     """
-    numerical_cols = [col for col in X.columns if X[col].dtype in ["int64", "float64"]]
-    categorical_cols = [col for col in X.columns if X[col].dtype == "object"]
+    numerical_cols = [col for col in X.columns if pd.api.types.is_numeric_dtype(X[col])]
+    categorical_cols = [col for col in X.columns if not pd.api.types.is_numeric_dtype(X[col])]
     
     return numerical_cols, categorical_cols

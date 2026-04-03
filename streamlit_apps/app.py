@@ -78,8 +78,8 @@ def compute_mi_scores(_X_train, _y_train):
     """Compute MI scores with feature engineering."""
     feature_pipeline = FeaturePipeline()
     X_train_fe = feature_pipeline.fit_transform(_X_train, _y_train)
-    # Identify discrete columns (categorical or integer types after encoding)
-    discrete_cols = X_train_fe.dtypes != float
+    # Mark encoded categorical features as discrete for mutual information.
+    discrete_cols = [col in feature_pipeline.categorical_cols_ for col in X_train_fe.columns]
     mi_scores = make_mi_scores(X_train_fe, _y_train, discrete_cols)
     return mi_scores, X_train_fe, feature_pipeline
 
