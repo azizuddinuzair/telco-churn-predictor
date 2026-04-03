@@ -51,7 +51,13 @@ def prepare_data(CustomerChurn: pd.DataFrame, test_size: float = 0.2, random_sta
     # Customer ID is not useful for prediction; model would memorize IDs
     # Also dropping some features based on analysis
     X = CustomerChurn.drop(["Churn", "customerID", "SeniorCitizen", "Partner", "Dependents"], axis=1)
-    y = CustomerChurn.Churn.replace({"Yes": 1, "No": 0})
+    y = CustomerChurn["Churn"].map({"Yes": 1, "No": 0})
+
+    if y.isna().any():
+        invalid_labels = sorted(CustomerChurn.loc[y.isna(), "Churn"].dropna().unique().tolist())
+        raise ValueError(f"Unexpected churn labels found: {invalid_labels}")
+
+    y = y.astype("int64")
 
     raw_feature_cols = X.columns.tolist()  # Used for user input later
 
