@@ -84,16 +84,19 @@ def inject_theme_styles() -> None:
             }}
 
             [data-testid="stSidebar"] button {{
-                background: transparent;
+                background: rgba(255, 255, 255, 0.03);
                 color: {PALETTE["sidebar_text"]};
-                border: 1px solid transparent;
-                border-radius: 12px;
+                border: 1px solid rgba(226, 232, 240, 0.14);
+                border-radius: 14px;
                 text-align: left;
+                padding: 0.7rem 0.9rem;
+                margin: 0.15rem 0;
+                font-weight: 600;
             }}
 
             [data-testid="stSidebar"] button:hover {{
                 background: {PALETTE["sidebar_hover"]};
-                border-color: {PALETTE["border"]};
+                border-color: rgba(226, 232, 240, 0.28);
             }}
 
             [data-testid="stSidebar"] h1,
@@ -130,19 +133,61 @@ def inject_theme_styles() -> None:
                 background: {PALETTE["secondary_hover"]};
             }}
 
+            label[data-testid="stWidgetLabel"],
+            .stTextInput label,
+            .stNumberInput label,
+            .stSelectbox label {{
+                color: {PALETTE["text_primary"]} !important;
+                font-weight: 600;
+            }}
+
             div[data-testid="stTextInput"] input,
-            div[data-testid="stNumberInput"] input,
-            div[data-testid="stSelectbox"] div[role="combobox"] {{
+            div[data-testid="stNumberInput"] input {{
                 background: {PALETTE["bg_secondary"]};
                 border: 1px solid #CBD5F5;
-                border-radius: 10px;
+                border-radius: 12px;
+                color: {PALETTE["text_primary"]};
+            }}
+
+            div[data-baseweb="select"] > div {{
+                background: {PALETTE["bg_secondary"]};
+                border: 1px solid #CBD5F5;
+                border-radius: 12px;
+                color: {PALETTE["text_primary"]};
+                min-height: 2.75rem;
             }}
 
             div[data-testid="stTextInput"] input:focus,
             div[data-testid="stNumberInput"] input:focus,
-            div[data-testid="stSelectbox"] div[role="combobox"]:focus-within {{
+            div[data-baseweb="select"] > div:focus-within {{
                 border-color: {PALETTE["primary"]};
                 box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            }}
+
+            div[data-baseweb="select"] span {{
+                color: {PALETTE["text_primary"]};
+            }}
+
+            div[data-baseweb="select"] svg {{
+                fill: {PALETTE["text_secondary"]};
+            }}
+
+            div[data-baseweb="popover"] {{
+                border: 1px solid {PALETTE["border"]};
+                border-radius: 12px;
+                box-shadow: 0 12px 32px {PALETTE["shadow"]};
+            }}
+
+            div[data-baseweb="menu"] {{
+                background: {PALETTE["bg_secondary"]};
+            }}
+
+            div[data-baseweb="option"] {{
+                color: {PALETTE["text_primary"]};
+            }}
+
+            div[data-baseweb="option"]:hover {{
+                background: {PALETTE["bg_tertiary"]};
             }}
 
             div[data-testid="stMetric"] {{
