@@ -85,7 +85,7 @@ def inject_theme_styles() -> None:
 
             [data-testid="stSidebar"] button {{
                 background: rgba(255, 255, 255, 0.03);
-                color: #93C5FD;
+                color: #0F172A;
                 border: 1px solid rgba(226, 232, 240, 0.14);
                 border-radius: 14px;
                 text-align: left;
@@ -97,7 +97,7 @@ def inject_theme_styles() -> None:
             [data-testid="stSidebar"] button:hover {{
                 background: {PALETTE["sidebar_hover"]};
                 border-color: rgba(226, 232, 240, 0.28);
-                color: #BFDBFE;
+                color: #0F172A;
             }}
 
             [data-testid="stSidebar"] h1,
