@@ -32,6 +32,203 @@ st.set_page_config(
 )
 
 
+PALETTE = {
+    "bg_primary": "#F8FAFC",
+    "bg_secondary": "#FFFFFF",
+    "bg_tertiary": "#F1F5F9",
+    "text_primary": "#0F172A",
+    "text_secondary": "#475569",
+    "text_hint": "#94A3B8",
+    "border": "#E2E8F0",
+    "shadow": "rgba(15, 23, 42, 0.08)",
+    "primary": "#2563EB",
+    "primary_hover": "#1D4ED8",
+    "secondary": "#E2E8F0",
+    "secondary_hover": "#CBD5F1",
+    "danger": "#DC2626",
+    "danger_hover": "#B91C1C",
+    "success": "#16A34A",
+    "warning": "#F59E0B",
+    "info": "#0EA5E9",
+    "sidebar_bg": "#0F172A",
+    "sidebar_text": "#CBD5F5",
+    "sidebar_hover": "#1E293B",
+}
+
+
+def inject_theme_styles() -> None:
+    st.markdown(
+        f"""
+        <style>
+            .stApp {{
+                background: {PALETTE["bg_primary"]};
+                color: {PALETTE["text_primary"]};
+            }}
+
+            .stApp main {{
+                background: {PALETTE["bg_primary"]};
+            }}
+
+            [data-testid="stHeader"] {{
+                background: {PALETTE["bg_secondary"]};
+                border-bottom: 1px solid {PALETTE["border"]};
+            }}
+
+            [data-testid="stSidebar"] {{
+                background: {PALETTE["sidebar_bg"]};
+                color: {PALETTE["sidebar_text"]};
+            }}
+
+            [data-testid="stSidebar"] * {{
+                color: {PALETTE["sidebar_text"]};
+            }}
+
+            [data-testid="stSidebar"] button {{
+                background: transparent;
+                color: {PALETTE["sidebar_text"]};
+                border: 1px solid transparent;
+                border-radius: 12px;
+                text-align: left;
+            }}
+
+            [data-testid="stSidebar"] button:hover {{
+                background: {PALETTE["sidebar_hover"]};
+                border-color: {PALETTE["border"]};
+            }}
+
+            [data-testid="stSidebar"] h1,
+            [data-testid="stSidebar"] h2,
+            [data-testid="stSidebar"] h3,
+            [data-testid="stSidebar"] p,
+            [data-testid="stSidebar"] span {{
+                color: {PALETTE["sidebar_text"]};
+            }}
+
+            [data-testid="stButton"] button {{
+                border-radius: 12px;
+                border: 1px solid {PALETTE["border"]};
+                transition: all 0.2s ease;
+            }}
+
+            [data-testid="stButton"] button[kind="primary"] {{
+                background: {PALETTE["primary"]};
+                color: #FFFFFF;
+                border-color: {PALETTE["primary"]};
+            }}
+
+            [data-testid="stButton"] button[kind="primary"]:hover {{
+                background: {PALETTE["primary_hover"]};
+                border-color: {PALETTE["primary_hover"]};
+            }}
+
+            [data-testid="stButton"] button:not([kind="primary"]) {{
+                background: {PALETTE["secondary"]};
+                color: {PALETTE["text_primary"]};
+            }}
+
+            [data-testid="stButton"] button:not([kind="primary"]):hover {{
+                background: {PALETTE["secondary_hover"]};
+            }}
+
+            div[data-testid="stTextInput"] input,
+            div[data-testid="stNumberInput"] input,
+            div[data-testid="stSelectbox"] div[role="combobox"] {{
+                background: {PALETTE["bg_secondary"]};
+                border: 1px solid #CBD5F5;
+                border-radius: 10px;
+            }}
+
+            div[data-testid="stTextInput"] input:focus,
+            div[data-testid="stNumberInput"] input:focus,
+            div[data-testid="stSelectbox"] div[role="combobox"]:focus-within {{
+                border-color: {PALETTE["primary"]};
+                box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+            }}
+
+            div[data-testid="stMetric"] {{
+                background: {PALETTE["bg_secondary"]};
+                border: 1px solid {PALETTE["border"]};
+                border-radius: 16px;
+                padding: 1rem;
+                box-shadow: 0 10px 24px {PALETTE["shadow"]};
+            }}
+
+            div[data-testid="stDataFrame"] {{
+                border: 1px solid {PALETTE["border"]};
+                border-radius: 14px;
+                overflow: hidden;
+                background: {PALETTE["bg_secondary"]};
+            }}
+
+            div[data-testid="stExpander"] {{
+                border: 1px solid {PALETTE["border"]};
+                border-radius: 14px;
+                background: {PALETTE["bg_secondary"]};
+            }}
+
+            .status-card {{
+                padding: 1rem 1.1rem;
+                border-radius: 16px;
+                border: 1px solid transparent;
+                box-shadow: 0 10px 24px {PALETTE["shadow"]};
+                margin: 0.5rem 0 1rem;
+                font-weight: 600;
+            }}
+
+            .status-card p {{
+                margin: 0;
+            }}
+
+            .status-ready {{
+                background: #E0F2FE;
+                color: #075985;
+                border-color: #BAE6FD;
+            }}
+
+            .status-low {{
+                background: #DCFCE7;
+                color: #166534;
+                border-color: #BBF7D0;
+            }}
+
+            .status-medium {{
+                background: #FEF3C7;
+                color: #92400E;
+                border-color: #FDE68A;
+            }}
+
+            .status-high {{
+                background: #FEE2E2;
+                color: #991B1B;
+                border-color: #FECACA;
+            }}
+
+            hr {{
+                border-color: {PALETTE["border"]};
+            }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+def render_status_card(message: str, variant: str = "ready") -> None:
+    st.markdown(f"<div class='status-card status-{variant}'>{message}</div>", unsafe_allow_html=True)
+
+
+def style_axes(ax, title: str, xlabel: str = "", ylabel: str = "") -> None:
+    ax.set_title(title, color=PALETTE["text_primary"], pad=12, fontweight="bold")
+    ax.set_xlabel(xlabel, color=PALETTE["text_secondary"])
+    ax.set_ylabel(ylabel, color=PALETTE["text_secondary"])
+    ax.set_facecolor(PALETTE["bg_secondary"])
+    ax.figure.set_facecolor(PALETTE["bg_primary"])
+    ax.grid(axis="x", color=PALETTE["border"], linestyle="--", linewidth=0.8, alpha=0.7)
+    ax.tick_params(colors=PALETTE["text_secondary"])
+
+
+inject_theme_styles()
+
+
 # Helper functions
 def get_user_input_streamlit(X_train, raw_feature_cols):
     """Collect user input via Streamlit form."""
@@ -142,7 +339,7 @@ if page == "User":
     with st.spinner("Loading model..."):
         model = train_model("RFC", X_train, y_train, numerical_cols, categorical_cols)
 
-    st.success("System ready!")
+    render_status_card("System ready! The churn model is loaded and ready for predictions.", "ready")
 
     st.markdown("---")
     st.subheader("Enter Customer Information")
@@ -162,9 +359,9 @@ if page == "User":
 
         st.subheader("Prediction Result")
         if prediction[0] == 1:
-            st.error("Customer is likely to CHURN")
+            render_status_card("Customer is likely to CHURN", "high")
         else:
-            st.success("Customer is likely to STAY")
+            render_status_card("Customer is likely to STAY", "low")
 
         with st.expander("View Input Summary"):
             st.dataframe(user_df.T, width='stretch')
@@ -188,10 +385,8 @@ elif page == "MI Analysis":
         with col2:
             st.subheader("Feature Importance Visualization")
             fig, ax = plt.subplots(figsize=(10, 8))
-            mi_scores.plot(kind='barh', ax=ax)
-            ax.set_xlabel("MI Score")
-            ax.set_ylabel("Features")
-            ax.set_title("Mutual Information Scores")
+            mi_scores.plot(kind='barh', ax=ax, color=PALETTE["primary"])
+            style_axes(ax, "Mutual Information Scores", "MI Score", "Features")
             st.pyplot(fig)
 
 
@@ -294,12 +489,24 @@ elif page == "Model Comparison":
         
         st.subheader("Performance Visualizations")
         fig, axes = plt.subplots(1, 2, figsize=(14, 5))
-        results_df.plot(x='Model', y=['Validation F1', 'Validation Accuracy'], kind='bar', ax=axes[0], rot=30)
-        axes[0].set_title("Validation Set Performance")
-        axes[0].set_ylabel("Score")
-        results_df.plot(x='Model', y=['CV F1', 'CV Accuracy'], kind='bar', ax=axes[1], rot=30)
-        axes[1].set_title("Cross-Validation Performance")
-        axes[1].set_ylabel("Score")
+        results_df.plot(
+            x='Model',
+            y=['Validation F1', 'Validation Accuracy'],
+            kind='bar',
+            ax=axes[0],
+            rot=30,
+            color=[PALETTE["primary"], PALETTE["success"]],
+        )
+        style_axes(axes[0], "Validation Set Performance", "Model", "Score")
+        results_df.plot(
+            x='Model',
+            y=['CV F1', 'CV Accuracy'],
+            kind='bar',
+            ax=axes[1],
+            rot=30,
+            color=[PALETTE["warning"], PALETTE["danger"]],
+        )
+        style_axes(axes[1], "Cross-Validation Performance", "Model", "Score")
         plt.tight_layout()
         st.pyplot(fig)
 
@@ -308,6 +515,6 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("<div style='text-align: center; margin-top: 2em;'>"
                 "<a href='https://github.com/azizuddinuzair/telco-churn-predictor' target='_blank' style='text-decoration: none;'>"
-                "<span style='display:inline-block;padding:0.5em 1.2em;background:#f5f5f5;border:1px solid #ddd;border-radius:6px;color:#222;font-size:1em;cursor:pointer;'>"
+                f"<span style='display:inline-block;padding:0.5em 1.2em;background:{PALETTE['primary']};border:1px solid {PALETTE['primary_hover']};border-radius:10px;color:#fff;font-size:1em;cursor:pointer;'>"
                 "View Repo"
                 "</span></a></div>", unsafe_allow_html=True)

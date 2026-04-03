@@ -73,9 +73,6 @@ coverage.xml
 *.npz
 *.npy
 
-# Streamlit
-.streamlit/
-
 # OS files
 .DS_Store
 Thumbs.db
